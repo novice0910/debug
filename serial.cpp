@@ -81,6 +81,12 @@ quint64 Serial::writeSerial(char *data, quint64 len)
     return ret;
 }
 
+quint64 Serial::writeSerial(const QByteArray &data)
+{
+    quint64 ret = this->write(data);
+    return ret;
+}
+
 quint64 Serial::readSerial(char *data, quint64 len)
 {
     quint64 ret = this->readData(data,len);

@@ -7,6 +7,14 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
     init();
+    char sendData[7];
+    sendData[0] = CARD_STX;
+    sendData[1] = 0x00;
+    sendData[2] = 0x02;
+    sendData[3] = 0x00;
+    sendData[4] = 0x00;
+    sendData[5] = xorCheck(&sendData[3],0x02);
+    sendData[6] = CARD_ETX;
 }
 
 MainWindow::~MainWindow()
@@ -58,4 +66,12 @@ void MainWindow::on_btnOnOff_clicked()
         m_CardComOn = false;
         ui->statusBar->showMessage(tr("串口关闭"),1000);
     }
+}
+
+void MainWindow::on_btnSend_clicked()
+{
+    qDebug()<<"111";
+    QByteArray array = ui->lineEdit->text().toLatin1();
+    qDebug()<<"dddd"<<array;
+    card->writeSerial(array);
 }

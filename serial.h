@@ -14,6 +14,7 @@ public:
     bool openSerial(QString portName, quint32 baud, char dataBit, char stopBit, char parity);
     quint64 writeSerial(char *data,quint64 len);
     quint64 readSerial(char *data,quint64 len);
+    quint64 writeSerial(const QByteArray &data);
     void closeSerial();
 public slots:
     virtual void receive();

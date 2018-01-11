@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 #include <QDebug>
+//#include <QtDebug>
 #include "cardcom.h"
 
 namespace Ui {
@@ -20,6 +21,7 @@ public:
 
 private slots:
     void on_btnOnOff_clicked();
+    void on_btnSend_clicked();
 
 private:
     Ui::MainWindow *ui;
