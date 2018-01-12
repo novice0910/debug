@@ -7,14 +7,6 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
     init();
-    char sendData[7];
-    sendData[0] = CARD_STX;
-    sendData[1] = 0x00;
-    sendData[2] = 0x02;
-    sendData[3] = 0x00;
-    sendData[4] = 0x00;
-    sendData[5] = xorCheck(&sendData[3],0x02);
-    sendData[6] = CARD_ETX;
 }
 
 MainWindow::~MainWindow()
@@ -25,6 +17,7 @@ MainWindow::~MainWindow()
 void MainWindow::init()
 {
     card = new CardCom;
+    card->init();
     m_CardComOn = false;
 }
 
@@ -70,8 +63,19 @@ void MainWindow::on_btnOnOff_clicked()
 
 void MainWindow::on_btnSend_clicked()
 {
-    qDebug()<<"111";
-    QByteArray array = ui->lineEdit->text().toLatin1();
-    qDebug()<<"dddd"<<array;
-    card->writeSerial(array);
+//    qDebug()<<"111";
+//    QByteArray array = ui->lineEdit->text().toLatin1();
+//    qDebug()<<"dddd"<<array;
+//    card->writeSerial(array);
+//    char buf[] = {0x02,0x00 ,0x04 ,0x32 ,0x24 ,0xff ,0xff,0x16,0x03};
+//    char vrfSecretKey[] = {0x02,0x00,0x0e,0x02,0x46
+//                           ,0x60 ,0xE4 ,0x85 ,0xAD ,0xB6 ,0x22,0x22
+//                           ,0x22 ,0x22 ,0x22 ,0x22 ,0x07 ,0x59 ,0x03};
+//    char buf1[sizeof(buf) + sizeof(vrfSecretKey)] ={};
+//    memcpy(buf1,buf,sizeof(buf));
+//    memcpy((buf1 + sizeof(buf)),vrfSecretKey,sizeof(vrfSecretKey));
+//    card->writeSerial(buf,sizeof(buf));
+//    usleep(100);
+//    card->writeSerial(vrfSecretKey,sizeof(vrfSecretKey));
+//    card->writeSerial(buf1,sizeof(buf1));
 }

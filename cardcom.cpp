@@ -32,9 +32,8 @@ void CardCom::receive()
         int ret = this->readSerial(buf,sizeof(buf));
         for(int i =0;i<ret;i++)
         {
-            queue->tail = (queue->tail + i) % queue->size;
             queue->space[queue->tail] = buf[i];
-            qDebug()<<buf[i];
+            queue->tail = (queue->tail + 1) % queue->size;
         }
     }
 }
@@ -55,11 +54,12 @@ void CardCom::slotOperateCardQueue()
             queue->head = (queue->head + 1) % queue->size;
         }
         else{
-            int surplus = queue->tail - queue->head;
-            if(surplus >= 3)                    //can read the message length
+            int surplus = queue->tail - queue->head;    //the remainning message length
+            if(surplus >= 3)                            //can get the message length
             {
-                msgLength = ((queue->space[queue->head + 1] & 0xff ) << 8)|
-                        (queue->space[queue->head + 2]);
+                //the message overall length
+                msgLength = (((queue->space[queue->head + 1] & 0xff ) << 8)|
+                        (queue->space[queue->head + 2]))+ 5;
                 if(surplus >= msgLength)        //have a whole message
                 {
                     memcpy(buf,&queue->space[queue->head],msgLength);
@@ -111,7 +111,14 @@ void CardCom::dealMsg(char *data, int len)
     }
     else if(data[3] == 0x32)
     {
-
+        switch (tmp){
+        case 0x24:
+            qDebug()<<"feed card serial number!!";
+            feedbackCardSerialNumber();
+            break;
+        default:
+            break;
+        }
     }
     else if(data[3] == 0x02)
     {
@@ -154,6 +161,7 @@ void CardCom::feedback_31_13()
     sendData[4] = 0x00;
     sendData[5] = xorCheck(&sendData[3],0x02);
     sendData[6] = CARD_ETX;
+    this->writeData(sendData,sizeof(sendData));
 }
 
 void CardCom::feedbackSuccess()
@@ -166,6 +174,7 @@ void CardCom::feedbackSuccess()
     sendData[4] = 0x00;
     sendData[5] = xorCheck(&sendData[3],0x02);
     sendData[6] = CARD_ETX;
+    this->writeData(sendData,sizeof(sendData));
 }
 
 void CardCom::feedbackCardSerialNumber()
